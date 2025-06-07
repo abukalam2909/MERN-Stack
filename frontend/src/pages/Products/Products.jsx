@@ -1,40 +1,34 @@
-import React from "react";
+import { useState } from "react";
 import Header from "../../components/Header";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import ProductCard from "../../components/ProductCard";
 import EmptyComponent from "../../components/EmptyComponent";
-import AddProduct from "./AddProduct";
+import AddProduct from "./ProductModal";
+import ProductModal from "./ProductModal";
 
 
 
 const Products = () => {
-  const sampleProducts = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      description: "Noise cancelling over-ear headphones",
-      banner:
-        "https://res.cloudinary.com/da3w329cx/image/upload/v1683056487/samples/landscapes/nature-mountains.jpg",
-      price: 120,
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      description: "Smart wearable with health tracking",
-      banner:
-        "https://res.cloudinary.com/da3w329cx/image/upload/v1683056500/cld-sample-5.jpg",
-      price: 80,
-    },
-    {
-      id: 3,
-      name: "Laptop",
-      description: "14-inch Full HD display, 256GB SSD",
-      banner:
-        "https://res.cloudinary.com/da3w329cx/image/upload/v1683056499/cld-sample-3.jpg",
-      price: 600,
-    },
-  ];
+  const sampleProducts = [];
 
+  const [showModal, setShowModal] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+
+
+  const handleAdd = () => {
+    setEditItem(null)
+
+    setShowModal(!showModal);
+  };
+
+  const handleSubmit = (values) => {
+    if (editItem) {
+      // dispatch update product action
+    } else {
+      // dispatch add product action
+    }
+  };
+  
   console.log("Products page rendered");
 
   return (
@@ -43,7 +37,11 @@ const Products = () => {
       <Header />
       <Container className="mt-4">
         <div className="d-flex justify-content-end mb-4">
-          <AddProduct />
+
+          <Button variant="primary" onClick={handleAdd}>
+            <i className="bi bi-plus-circle me-2"></i>
+            Add Product
+          </Button>
         </div>
 
         {sampleProducts.length === 0 ? (
@@ -63,37 +61,24 @@ const Products = () => {
           </Row>
         )}
       </Container>
+      <ProductModal
+        show={showModal}
+        onClose={() => setShowModal(!showModal)}
+        initialValues={
+          editItem || {
+            title: "",
+            image: "",
+            description: "",
+            price: 0,
+          }
+        }
+        onSubmit={handleSubmit}
+      />
+
     </section>
     </>
   );
 
-  // return (
-  //   <>
-  //     <section>
-  //       <Header />
-  //       <Container className="mt-4">
-  //         <div className="d-flex justify-content-end mb-4">
-  //           {/* <AddProduct /> */}
-  //         </div>
-  
-  //         {/* {sampleProducts.length === 0 ? (
-  //           <div
-  //             className="d-flex justify-content-center align-items-center"
-  //             style={{ minHeight: "200px" }}
-  //           >
-  //             <EmptyComponent message="We're currently out of stock" />
-  //           </div>
-  //         ) : ( */}
-  //         <Row className="g-4">
-  //           <Col>
-  //             <div className="border p-3 bg-light text-center">Test render</div>
-  //           </Col>
-  //         </Row>
-  //         {/* )} */}
-  //       </Container>
-  //     </section>
-  //   </>
-  // );
   
 };
 
