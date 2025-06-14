@@ -2,7 +2,7 @@ import React, {useState, useEffect, use} from 'react'
 import Header from '../../components/Header.jsx'
 import { Container, Row, Col, Button} from 'react-bootstrap';
 import ProductCard from '../../components/ProductCard.jsx';
-import ProductModel from './ProductModel.js';
+import ProductModel from './ProductModel.jsx';
 import EmptyComponent from '../../components/Empty.jsx';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchProducts, deleteProduct, createProduct, updateProduct } from '../../redux/actions/productActions.js';
