@@ -4,22 +4,49 @@ import Product from "../model/product.model.js"
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({})
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const sort = req.query.sort
+            ? req.query.sort.split(',').join(' ')
+            : '-createdAt'; 
+
+        const keyword = req.query.keyword
+            ? {
+                  $or: [
+                      { title: { $regex: req.query.keyword, $options: 'i' } },
+                      { description: { $regex: req.query.keyword, $options: 'i' } },
+                  ],
+              }
+            : {};
+
+        const products = await Product.find(keyword)
+            .sort(sort)
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Product.countDocuments(keyword);
 
         res.status(200).json({
-        success: true,
-        message: "Product fetched successfully",
-        data: products
-        })  
-    }
-    catch(error){
-        console.error ("Error in fetching products:", error.message);
+            success: true,
+            message: "Products fetched successfully",
+            data: products,
+            pagination: {
+                total,
+                page,
+                pages: Math.ceil(total / limit),
+            },
+        });
+    } catch (error) {
+        console.error("Error fetching products:", error.message);
         res.status(500).json({
-            success: false, 
-            message: "Server Error"
-        })
+            success: false,
+            message: "Server Error",
+        });
     }
-}
+};
+
 
 export const getProductById = async (req, res) => {
 
@@ -124,4 +151,3 @@ export const deleteProduct = async (req, res) => {
         });
     }
 };
-// ...existing code...
